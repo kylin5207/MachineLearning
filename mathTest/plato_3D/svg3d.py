@@ -9,8 +9,10 @@ import svgwrite
 
 from typing import NamedTuple, Callable, Sequence
 
-
+# 首先，需要定义在几乎任何3D渲染器中都会找到的经典成分：视口、相机、网格和场景的类：
+# 视图类
 class Viewport(NamedTuple):
+    # 定义相机投影到的最终图像中的矩形区域。除非图像包含多个面板，否则可以将其设置为默认值。
     minx: float = -0.5
     miny: float = -0.5
     width: float = 1.0
@@ -25,19 +27,21 @@ class Viewport(NamedTuple):
         args = [float(f) for f in string_to_parse.split()]
         return cls(*args)
 
-
+# 相机包含视图矩阵和投影矩阵。
+# 我们可以使用pyrr来生成这些；它提供create_look_at和create_perspective_projection功能
 class Camera(NamedTuple):
     view: np.ndarray
     projection: np.ndarray
 
-
+# 网格有一个面列表、一个着色器和一个应用于表示网格的SVG组的样式字典。
+# 网格还包含一个称为面的三维 numpy 数组，其形状为 n⨯m⨯3，其中n是面数，m是每个面的顶点数（例如，对于四边形网格，m=4）。最后一个轴的长度为3，因为网格由 XYZ 坐标组成。
 class Mesh(NamedTuple):
     faces: np.ndarray
     shader: Callable[[int, float], dict] = None
     style: dict = None
     circle_radius: float = 0
 
-
+# 场景类
 class Scene(NamedTuple):
     meshes: Sequence[Mesh]
 
@@ -52,6 +56,7 @@ class View(NamedTuple):
 
 
 class Engine:
+    # 负责使用场景描述并生成SVG文件。
     def __init__(self, views, precision=5):
         self.views = views
         self.precision = precision
@@ -63,6 +68,7 @@ class Engine:
 
     def render_to_drawing(self, drawing):
         for view in self.views:
+            # numpy.dot请注意将一个 4x4 矩阵与另一个矩阵相乘的用法。生成的矩阵将用于将齐次坐标投影到观察平面上。
             projection = np.dot(view.camera.view, view.camera.projection)
 
             clip_path = drawing.defs.add(drawing.clipPath())
@@ -146,22 +152,3 @@ class Engine:
         for face_index in range(len(z_centroids)):
             z_centroids[face_index] /= len(faces[face_index])
         return np.argsort(z_centroids)
-
-
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
