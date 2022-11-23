@@ -8,13 +8,14 @@ Created on Thu May 30 11:02:24 2019
 
 # !/usr/bin/python
 # -*- coding:utf-8 -*-
-
+import graphviz
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 import pandas as pd
+from sklearn import tree
 
 # iris_feature = u'花萼长度', u'花萼宽度', u'花瓣长度', u'花瓣宽度'
 iris_feature = 'sepal length', 'sepal width', 'petal length', 'petal width'
@@ -45,8 +46,12 @@ if __name__ == "__main__":
         x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7)
         
         # 3. 决策树学习
-        clf = DecisionTreeClassifier(criterion='entropy', min_samples_leaf=3)
+        clf = DecisionTreeClassifier(criterion='entropy', min_samples_leaf=3, max_depth=3)
         dt_clf = clf.fit(x_train, y_train)
+
+        dot_data = tree.export_graphviz(clf, out_file=None, feature_names=None, filled=True, rounded=True)  # 重要参数可定制
+        graph = graphviz.Source(dot_data)
+        graph.render(view=True, format="pdf", filename="decisiontree_plot")
 
         # 画图
         N, M = 500, 500  # 横纵各采样多少个值
@@ -83,6 +88,5 @@ if __name__ == "__main__":
         plt.grid()
 
     plt.suptitle(u'Iris Category Prediction By Decision Tree with Two Features', fontsize=18)
-    plt.tight_layout(2)
     plt.subplots_adjust(top=0.92)
     plt.show()
