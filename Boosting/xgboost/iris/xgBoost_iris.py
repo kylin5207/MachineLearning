@@ -39,3 +39,8 @@ if __name__ == "__main__":
     y_hat = bst.predict(data_test)
     result = y_test.reshape(1, -1) == y_hat
     print('正确率:\t', float(np.sum(result)) / len(y_hat))
+    
+    # show xgboost tree
+    digraph = xgb.to_graphviz(bst, num_trees=0)
+    digraph.format = 'png'
+    digraph.view('./xgb_demo')
