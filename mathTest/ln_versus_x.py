@@ -1,6 +1,6 @@
 """
 ln(x+1)与x的关系:
-x > ln(x+1)
+x > ln(x+1), when x > 0
 """
 import matplotlib.pyplot as plt
 import numpy as np
