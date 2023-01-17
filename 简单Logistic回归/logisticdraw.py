@@ -20,8 +20,8 @@ plt.ylabel("y")
 plt.title(r"$logistic = \frac{1}{1+e^{-x}}$")
 
 plt.subplot(1, 2, 2)
-plt.plot(x, logit)
-plt.xlabel("x")
+plt.plot(p, logit)
+plt.xlabel("p")
 plt.ylabel("y")
 plt.title(r"$logistic = \frac{p}{1 - p}$")
 
