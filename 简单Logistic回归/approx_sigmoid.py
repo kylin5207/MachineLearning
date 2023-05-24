@@ -65,19 +65,13 @@ def minmax2_sigmoid(X, plot=False):
 
 
 def piecewise_sigmoid(X, plot=False):
-    def f1(x):
-        return 0
-
-    def f2(x):
-        return x+0.5
-
-    def f3(x):
-        return 1
-
-    conditions = [X < -0.5, (X >= -0.5) & (X <= 0.5), X > 0.5]
-    # functions = [f1, f2, f3]
-    functions = [0, f2, 1]
-    y = np.piecewise(X, conditions, functions)
+    # 方法一：利用piecewiese
+    #conditions = [X < -0.5, (X >= -0.5) & (X <= 0.5), X > 0.5]
+    #functions = [0, lambda v: v+0.5, 1]
+    #y = np.piecewise(X, conditions, functions)
+    
+    # 方法二：利用clip
+    y = np.clip(X+0.5, 0, 1)
 
     # plot
     if plot:
