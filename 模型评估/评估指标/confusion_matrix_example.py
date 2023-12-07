@@ -32,6 +32,8 @@ def compute_confusion_matrix(labels, pred_labels_list, true_labels_list):
 def compute_acc(matrix):
     """
     计算总体准确率
+    Args:
+        matrix: numpy.ndarray, confusion matrix.
     """
     return np.trace(matrix)/np.sum(matrix)
 
