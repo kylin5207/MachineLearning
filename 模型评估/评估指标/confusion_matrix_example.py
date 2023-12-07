@@ -18,7 +18,7 @@ confusion_matrix 参数说明
 
 """
 import numpy as np
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, accuracy_score
 
 def compute_confusion_matrix(labels, pred_labels_list, true_labels_list):
     # y_pred
@@ -29,13 +29,16 @@ def compute_confusion_matrix(labels, pred_labels_list, true_labels_list):
                               labels=labels)
     return matrix
 
-def compute_acc(matrix):
+def compute_acc_withCM(matrix):
     """
-    计算总体准确率
+    根据混淆矩阵计算总体准确率
     Args:
         matrix: numpy.ndarray, confusion matrix.
     """
     return np.trace(matrix)/np.sum(matrix)
+
+def compute_acc(y_true, y_pred):
+    return np.sum(y_true == y_pred) / y_true.shape[0]
 
 # 真实标签
 y_true = np.asarray([2, 0, 2, 2, 0, 1])
@@ -50,4 +53,6 @@ cm = compute_confusion_matrix(labels,y_pred, y_true)
 print(cm)
 
 # 计算ACC
-print(f"acc = {compute_acc(cm)}")
+print(f"acc with matrix = {compute_acc_withCM(cm)}")
+print(f"acc = {compute_acc(y_true, y_pred)}")
+print(f"acc sklearn = {accuracy_score(y_true, y_pred)}")
