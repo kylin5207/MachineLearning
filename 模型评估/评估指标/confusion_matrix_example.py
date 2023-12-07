@@ -40,6 +40,14 @@ def compute_acc_withCM(matrix):
 def compute_acc(y_true, y_pred):
     return np.sum(y_true == y_pred) / y_true.shape[0]
 
+def compute_aa(matrix):
+    """
+    计算每一类的准确率,AA=(TP/(TP+FN)+TN/(FP+TN))/2
+    :param matrix:
+    :return:
+    """
+    return np.mean(np.diag(matrix) / np.sum(matrix, axis=1))
+
 # 真实标签
 y_true = np.asarray([2, 0, 2, 2, 0, 1])
 labels = np.unique(y_true)
@@ -49,10 +57,13 @@ y_pred = np.asarray([0, 0, 2, 2, 0, 2])
 
 # 计算混淆矩阵
 cm = compute_confusion_matrix(labels,y_pred, y_true)
-
-print(cm)
+print(f"confusion matrix = {cm}")
 
 # 计算ACC
 print(f"acc with matrix = {compute_acc_withCM(cm)}")
 print(f"acc = {compute_acc(y_true, y_pred)}")
 print(f"acc sklearn = {accuracy_score(y_true, y_pred)}")
+
+# averacy acc
+aa = compute_aa(cm)
+print(f"averacy acc = {aa}")
