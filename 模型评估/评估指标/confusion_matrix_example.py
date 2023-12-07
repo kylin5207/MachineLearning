@@ -29,6 +29,11 @@ def compute_confusion_matrix(labels, pred_labels_list, true_labels_list):
                               labels=labels)
     return matrix
 
+def compute_acc(matrix):
+    """
+    计算总体准确率
+    """
+    return np.trace(matrix)/np.sum(matrix)
 
 # 真实标签
 y_true = np.asarray([2, 0, 2, 2, 0, 1])
@@ -41,3 +46,6 @@ y_pred = np.asarray([0, 0, 2, 2, 0, 2])
 cm = compute_confusion_matrix(labels,y_pred, y_true)
 
 print(cm)
+
+# 计算ACC
+print(f"acc = {compute_acc(cm)}")
