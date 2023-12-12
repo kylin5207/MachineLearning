@@ -48,12 +48,31 @@ def compute_aa(matrix):
     """
     return np.mean(np.diag(matrix) / np.sum(matrix, axis=1))
 
+def compute_kappa(y_true, y_pred, label):
+    """
+     计算kappa系数
+    :param y_true: 真实标签
+    :param y_pred: 预测标签
+    :param label: 标签类型
+    :return:
+    """
+    # 计算实际一致性
+    po = compute_acc(y_true, y_pred)
+    # 计算混淆矩阵
+    matrix = compute_confusion_matrix(label, y_pred, y_true)
+    # 计算偶然一致性
+    pe = 0
+    for i in range(len(matrix)):
+        pe += np.sum(matrix[i]) * np.sum(matrix[:, i])
+    pe = pe / np.sum(matrix) ** 2
+    return (po - pe) / (1 - pe)
+
 # 真实标签
-y_true = np.asarray([2, 0, 2, 2, 0, 1])
+y_true = np.asarray([1, 0, 1, 1, 0, 1])
 labels = np.unique(y_true)
 
 # 预测标签
-y_pred = np.asarray([0, 0, 2, 2, 0, 2])
+y_pred = np.asarray([0, 0, 1, 1, 0, 1])
 
 # 计算混淆矩阵
 cm = compute_confusion_matrix(labels,y_pred, y_true)
@@ -67,3 +86,7 @@ print(f"acc sklearn = {accuracy_score(y_true, y_pred)}")
 # averacy acc
 aa = compute_aa(cm)
 print(f"averacy acc = {aa}")
+
+# compute kappa
+kappa = compute_kappa(y_true, y_pred, labels)
+print(f"kappa = {kappa}")
