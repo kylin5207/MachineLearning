@@ -29,6 +29,19 @@ def compute_confusion_matrix(labels, pred_labels_list, true_labels_list):
                               labels=labels)
     return matrix
 
+def reconstruct_confusion_matrix(cm):
+    """
+    重新排列混淆矩阵元素位置
+    :param cm:
+    :return:
+    """
+    # 从混淆矩阵中提取元素
+    TN, FP, FN, TP = cm.ravel()
+
+    # 重新排列为 TP, FN, FP, TN
+    new_cm = np.asarray([[TP, FN], [FP, TN]])
+    return new_cm
+
 def compute_acc_withCM(matrix):
     """
     根据混淆矩阵计算总体准确率
@@ -76,7 +89,9 @@ y_pred = np.asarray([0, 0, 1, 1, 0, 1])
 
 # 计算混淆矩阵
 cm = compute_confusion_matrix(labels,y_pred, y_true)
+# 默认顺序是[[TN, FP], [FN, TP]]
 print(f"confusion matrix = {cm}")
+print(f"reconstruct confusion matrix = {reconstruct_confusion_matrix(cm)}")
 
 # 计算ACC
 print(f"acc with matrix = {compute_acc_withCM(cm)}")
